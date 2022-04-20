@@ -4,147 +4,11 @@ import './App.css';
 
 function App() {
   const [modalShow, setModalShow] = React.useState(true);
-
-  return (
-    <>
-      <LogInModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
-  </>
-  )
-}
-
-export default App;
-
-function LogInModal(props) {
-
   const [profileShow, setProfileShow] = React.useState(false);
   const [signUpShow, setSignUpShow] = React.useState(false);
-
-  function logInBtnHandler() {
-    // props.onHide();
-    setProfileShow(true);
-  }
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Login Modal</h4>
-        <p>
-          Should have a sign up button
-        </p>
-      </Modal.Body>
-      <Modal.Footer>
-      <Button variant="primary" onClick={() => {setSignUpShow(true); props.onHide()}}>
-          SignUp
-       </Button>
-        <Button variant="primary" onClick={logInBtnHandler}>
-          Login
-       </Button>
-       <ProfileModal
-        show={profileShow}
-        onHide={() => setProfileShow(false)}
-      />
-      <SignUpModal
-        show={signUpShow}
-        onHide={() => setSignUpShow(false)}
-      />
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-function SignUpModal(props) {
-
-  const [profileShow, setProfileShow] = React.useState(false);
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>SignUp Modal</h4>
-        <p>
-          Input fields...
-        </p>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={() => setProfileShow(true)}>
-          Sign Up
-       </Button>
-       <ProfileModal
-        show={profileShow}
-        onHide={() => setProfileShow(false)}
-      />
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-function ProfileModal(props) {
-
   const [quizShow, setQuizShow] = React.useState(false);
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Profile Modal</h4>
-        <p>
-          Shows previous quiz attempt results...
-        </p>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={() => setQuizShow(true)}>
-          Start Quiz
-       </Button>
-       <QuizModal
-        show={quizShow}
-        onHide={() => setQuizShow(false)}
-      />
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-
-function QuizModal(props) {
-
   const [resultsShow, setResultsShow] = React.useState(false);
+  const [userInput, setUserInput] = useState([]);
 
 
   let array = [
@@ -180,36 +44,158 @@ function QuizModal(props) {
     }
   ]
 
+
+
+
+  return (
+    <>
+      <LogInModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        setSignUpShow={setSignUpShow}
+        setProfileShow={setProfileShow}
+      />
+      <ProfileModal
+        show={profileShow}
+        onHide={() => setProfileShow(false)}
+        setQuizShow={setQuizShow}
+      />
+      <SignUpModal
+        show={signUpShow}
+        onHide={() => setSignUpShow(false)}
+        setProfileShow={setProfileShow}
+      />
+      <QuizModal
+        show={quizShow}
+        onHide={() => setQuizShow(false)}
+        setResultsShow={setResultsShow}
+        array={array}
+        userInput={userInput}
+        setUserInput={setUserInput}
+      />
+      <ResultsModal
+        show={resultsShow}
+        onHide={() => setResultsShow(false)}
+        questionsArray={array}
+        userInput={userInput}
+      />
+  </>
+  )
+}
+
+export default App;
+
+function LogInModal(props) {
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>Login Modal</h4>
+        <p>
+          Should have a sign up button
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+      <Button variant="primary" onClick={() => {props.setSignUpShow(true); props.onHide()}}>
+          SignUp
+       </Button>
+      <Button variant="primary" onClick={() => {props.setProfileShow(true); props.onHide()}}>
+          Login
+       </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function SignUpModal(props) {
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>SignUp Modal</h4>
+        <p>
+          Input fields...
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => {props.setProfileShow(true); props.onHide()}}>
+          Sign Up
+       </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function ProfileModal(props) {
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>Profile Modal</h4>
+        <p>
+          Shows previous quiz attempt results...
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => {props.setQuizShow(true); props.onHide()}}>
+          Start Quiz
+       </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+
+function QuizModal(props) {
+
+
   const [arrayIndex, setArrayIndex] = useState(0);
-
-  const [userInput, setUserInput] = useState([]);
-
-// function saveUserInput() {
-//     if (document.getElementById('0').checked === true) {
-//     userInput[arrayIndex] = 0
-//     } else if (document.getElementById('1').checked === true) {
-//     userInput[arrayIndex] = 1
-//     } else if (document.getElementById('2').checked === true) {
-//     userInput[arrayIndex] = 2
-//     } else if (document.getElementById('3').checked === true) {
-//     userInput[arrayIndex] = 3
-//     } else {
-//     userInput[arrayIndex] = -1
-//     }
-//     console.log(userInput)
-// }
 
 function handleChange(answerId, questionIndex) {
   console.log(answerId, questionIndex)
-  let userList = userInput
+  let userList = props.userInput
   userList[questionIndex] = answerId
-  setUserInput([...userList]);
-  console.log(userInput)
-  // setUserInput([...userInput, event.target.value])
+  props.setUserInput([...userList]);
 }
 
   function addOneToIndex() {
-    if (arrayIndex < array.length - 1) {
+    if (arrayIndex < props.array.length - 1) {
       setArrayIndex(prevArrayIndex => prevArrayIndex + 1)
     }
   }
@@ -226,9 +212,9 @@ function handleChange(answerId, questionIndex) {
 
   function totalMark() {
     let mark = 0
-    for (let i=0; i < userInput.length; i++) {
-        console.log(userInput[i], array[i].correctAnswerIndex)
-        if (userInput[i] === array[i].correctAnswerIndex) {
+    for (let i=0; i < props.userInput.length; i++) {
+        console.log(props.userInput[i], props.array[i].correctAnswerIndex)
+        if (props.userInput[i] === props.array[i].correctAnswerIndex) {
             mark += 1
         }
     }
@@ -238,7 +224,8 @@ function handleChange(answerId, questionIndex) {
 
   function submitBtnHandler() {
     totalMark();
-    setResultsShow(true);
+    props.setResultsShow(true);
+    props.onHide()
   }
 
   return (
@@ -252,21 +239,21 @@ function handleChange(answerId, questionIndex) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Question {arrayIndex + 1} of {array.length}
+          Question {arrayIndex + 1} of {props.array.length}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>{array[arrayIndex].question}</h4>
+        <h4>{props.array[arrayIndex].question}</h4>
         <p>
         <Form>
-          {array[arrayIndex].answers.map((answer) => (
+          {props.array[arrayIndex].answers.map((answer) => (
             <div key={answer.id} className="mb-3">
               <Form.Check 
                 type='radio'
                 id={answer.id}
-                className={userInput[arrayIndex] === answer.id ? "some-class" : ""}
+                className={props.userInput[arrayIndex] === answer.id ? "some-class" : ""}
                 label={answer.text}
-                checked={userInput[arrayIndex] === answer.id}
+                checked={props.userInput[arrayIndex] === answer.id}
                 onChange={(event) => {
                   handleChange(answer.id, arrayIndex)
                 }}
@@ -280,13 +267,7 @@ function handleChange(answerId, questionIndex) {
         <Button id="previous-question-btn" onClick={minusOneFromIndex}>Previous Question</Button>
         <Button onClick={nextBtnHandler}>Next Question</Button>
         <Button onClick={submitBtnHandler}>Submit Quiz</Button>
-        <ResultsModal
-        show={resultsShow}
-        onHide={() => setResultsShow(false)}
-        questionsArray={array}
-        userInput={userInput}
         
-      />
       </Modal.Footer>
     </Modal>
   );
