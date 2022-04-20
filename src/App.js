@@ -3,29 +3,149 @@ import { Button, Stack, Container, Modal, Form } from 'react-bootstrap';
 import './App.css';
 
 function App() {
-  const [modalShow, setModalShow] = React.useState(false);
+  const [modalShow, setModalShow] = React.useState(true);
 
   return (
     <>
-    <div id="start-btn-wrapper" className="text-center align-self-center h-100vh">
-    <Button variant="primary" onClick={() => setModalShow(true)}>
-      Start Quiz
-      {/* button will later be in a modal */}
-    </Button>
-    </div>
-    
-
-    <QuizModal
-      show={modalShow}
-      onHide={() => setModalShow(false)}
-    />
+      <LogInModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
   </>
   )
 }
 
 export default App;
 
+function LogInModal(props) {
+
+  const [profileShow, setProfileShow] = React.useState(false);
+  const [signUpShow, setSignUpShow] = React.useState(false);
+
+  function logInBtnHandler() {
+    // props.onHide();
+    setProfileShow(true);
+  }
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>Login Modal</h4>
+        <p>
+          Should have a sign up button
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+      <Button variant="primary" onClick={() => {setSignUpShow(true); props.onHide()}}>
+          SignUp
+       </Button>
+        <Button variant="primary" onClick={logInBtnHandler}>
+          Login
+       </Button>
+       <ProfileModal
+        show={profileShow}
+        onHide={() => setProfileShow(false)}
+      />
+      <SignUpModal
+        show={signUpShow}
+        onHide={() => setSignUpShow(false)}
+      />
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function SignUpModal(props) {
+
+  const [profileShow, setProfileShow] = React.useState(false);
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>SignUp Modal</h4>
+        <p>
+          Input fields...
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => setProfileShow(true)}>
+          Sign Up
+       </Button>
+       <ProfileModal
+        show={profileShow}
+        onHide={() => setProfileShow(false)}
+      />
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function ProfileModal(props) {
+
+  const [quizShow, setQuizShow] = React.useState(false);
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>Profile Modal</h4>
+        <p>
+          Shows previous quiz attempt results...
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => setQuizShow(true)}>
+          Start Quiz
+       </Button>
+       <QuizModal
+        show={quizShow}
+        onHide={() => setQuizShow(false)}
+      />
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+
 function QuizModal(props) {
+
+  const [resultsShow, setResultsShow] = React.useState(false);
+
 
   let array = [
     {
@@ -104,6 +224,23 @@ function handleChange(answerId, questionIndex) {
     addOneToIndex();
   }
 
+  function totalMark() {
+    let mark = 0
+    for (let i=0; i < userInput.length; i++) {
+        console.log(userInput[i], array[i].correctAnswerIndex)
+        if (userInput[i] === array[i].correctAnswerIndex) {
+            mark += 1
+        }
+    }
+    console.log(`${mark} out of 3`);
+    return mark
+  }
+
+  function submitBtnHandler() {
+    totalMark();
+    setResultsShow(true);
+  }
+
   return (
     <Modal
       {...props}
@@ -142,8 +279,54 @@ function handleChange(answerId, questionIndex) {
       <Modal.Footer>
         <Button id="previous-question-btn" onClick={minusOneFromIndex}>Previous Question</Button>
         <Button onClick={nextBtnHandler}>Next Question</Button>
-        <Button>Submit Quiz</Button>
+        <Button onClick={submitBtnHandler}>Submit Quiz</Button>
+        <ResultsModal
+        show={resultsShow}
+        onHide={() => setResultsShow(false)}
+        questionsArray={array}
+        userInput={userInput}
+        
+      />
       </Modal.Footer>
     </Modal>
   );
 }
+
+
+function ResultsModal(props) {
+
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0)
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+         Results
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>          
+          {props.questionsArray[selectedQuestionIndex].question}
+        </h4>
+        <p>
+          {props.questionsArray[selectedQuestionIndex].answers.map((answer, index) => (
+            <p>{answer.text}</p>
+          ))}
+          {props.questionsArray.map((question, index) => (
+            <Button onClick={() => setSelectedQuestionIndex(index)}>Question {index+1}</Button>
+          ))}
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
