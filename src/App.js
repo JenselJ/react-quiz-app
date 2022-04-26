@@ -20,7 +20,8 @@ function App() {
         { id: 2, text: "4inches"},
         { id: 3, text: "10000km"}
       ],
-      correctAnswerIndex: 3
+      correctAnswerIndex: 3,
+      explanation: "The sun is really big."
     },
     {
       question: "What color is a banana?",
@@ -30,7 +31,8 @@ function App() {
         { id: 2, text: "red"},
         { id: 3, text: "purple"}
       ],
-      correctAnswerIndex: 1
+      correctAnswerIndex: 1,
+      explanation: "Bananas are yellow."
     },
     {
       question: "What is 2 + 2?",
@@ -40,7 +42,8 @@ function App() {
         { id: 2, text: "15"},
         { id: 3, text: "0"}
       ],
-      correctAnswerIndex: 0
+      correctAnswerIndex: 0,
+      explanation: "Two more than two is four."
     }
   ]
 
@@ -211,6 +214,7 @@ function handleChange(answerId, questionIndex) {
   }
 
   function totalMark() {
+    /*
     let mark = 0
     for (let i=0; i < props.userInput.length; i++) {
         console.log(props.userInput[i], props.array[i].correctAnswerIndex)
@@ -218,6 +222,14 @@ function handleChange(answerId, questionIndex) {
             mark += 1
         }
     }
+    */
+   /*
+   let mark = 0
+   props.userInput.forEach((userIndex, index) => {
+     if (userIndex === props.array[i].correctAnswerIndex) mark += 1;
+   })
+   */
+    const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
     console.log(`${mark} out of 3`);
     return mark
   }
@@ -227,6 +239,8 @@ function handleChange(answerId, questionIndex) {
     props.setResultsShow(true);
     props.onHide()
   }
+
+  
 
   return (
     <Modal
@@ -278,6 +292,26 @@ function ResultsModal(props) {
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0)
 
+  function resultColor(correctAnswerIndex, answerIndex, userInputIndex) {
+    if (userInputIndex === answerIndex && userInputIndex === correctAnswerIndex) {
+      return "#32CD32"
+    } else if (userInputIndex === answerIndex && userInputIndex !== correctAnswerIndex) {
+      return "#ff7f7f"
+    }
+  }
+
+
+let correctAnswer = '';
+    if (props.questionsArray[selectedQuestionIndex].correctAnswerIndex === 0) {
+      correctAnswer = 'A'
+    } else if (props.questionsArray[selectedQuestionIndex].correctAnswerIndex === 1) {
+      correctAnswer = 'B'
+    } else if (props.questionsArray[selectedQuestionIndex].correctAnswerIndex === 2) {
+      correctAnswer = 'C'
+    } else if (props.questionsArray[selectedQuestionIndex].correctAnswerIndex === 3) {
+      correctAnswer = 'D'
+    }
+
   return (
     <Modal
       {...props}
@@ -289,18 +323,28 @@ function ResultsModal(props) {
     >
       <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
-         Results
+         Results: {props.userInput.reduce((accum, curr, i) => accum + (curr === props.questionsArray[i].correctAnswerIndex ? 1 : 0), 0)} / {props.questionsArray.length}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <h4>          
-          {props.questionsArray[selectedQuestionIndex].question}
+          {props.questionsArray[selectedQuestionIndex].question} 
+          
         </h4>
-        <p>
+        <p className="answers">
           {props.questionsArray[selectedQuestionIndex].answers.map((answer, index) => (
-            <p>{answer.text}</p>
+            <p style={{
+              background: resultColor(props.questionsArray[selectedQuestionIndex].correctAnswerIndex, index, props.userInput[selectedQuestionIndex])
+            }}>{answer.text}
+            </p>
           ))}
-          {props.questionsArray.map((question, index) => (
+        </p>
+        <h6>
+          Correct Answer: {correctAnswer}
+        </h6>
+        <p> Explanation: {props.questionsArray[selectedQuestionIndex].explanation}</p>
+        <p>
+        {props.questionsArray.map((question, index) => (
             <Button onClick={() => setSelectedQuestionIndex(index)}>Question {index+1}</Button>
           ))}
         </p>
