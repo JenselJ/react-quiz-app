@@ -1,13 +1,57 @@
 import React, { useState } from 'react';
 import { Button, Stack, Container, Modal, Form } from 'react-bootstrap';
 import './App.css';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
+
+
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDfMNY62TVlbxnIi-VNubg97r5DR7Jrz9Q",
+  authDomain: "react-quiz-app-78f64.firebaseapp.com",
+  projectId: "react-quiz-app-78f64",
+  databaseURL: "https://react-quiz-app-78f64-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  storageBucket: "react-quiz-app-78f64.appspot.com",
+  messagingSenderId: "515679036300",
+  appId: "1:515679036300:web:2c6f24d7197e516f83eca9",
+  measurementId: "G-NBWD09HK5V"
+};
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const database = getDatabase(app);
+
+
+
 
 function App() {
-  const [modalShow, setModalShow] = React.useState(true);
-  const [profileShow, setProfileShow] = React.useState(false);
-  const [signUpShow, setSignUpShow] = React.useState(false);
-  const [quizShow, setQuizShow] = React.useState(false);
-  const [resultsShow, setResultsShow] = React.useState(false);
+
+
+  
+  // Initialize Firebase Authentication and get a reference to the service
+  const auth = getAuth(app);
+
+  const [user, setUser] = useState();
+
+
+
+
+
+  // const [modalShow, setModalShow] = React.useState(true);
+  // const [profileShow, setProfileShow] = React.useState(false);
+  // const [signUpShow, setSignUpShow] = React.useState(false);
+  // const [quizShow, setQuizShow] = React.useState(false);
+  // const [resultsShow, setResultsShow] = React.useState(false);
   const [userInput, setUserInput] = useState([]);
 
 
@@ -51,38 +95,39 @@ function App() {
 
 
   return (
-    <>
-      <LogInModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        setSignUpShow={setSignUpShow}
-        setProfileShow={setProfileShow}
-      />
-      <ProfileModal
-        show={profileShow}
-        onHide={() => setProfileShow(false)}
-        setQuizShow={setQuizShow}
-      />
-      <SignUpModal
-        show={signUpShow}
-        onHide={() => setSignUpShow(false)}
-        setProfileShow={setProfileShow}
-      />
-      <QuizModal
-        show={quizShow}
-        onHide={() => setQuizShow(false)}
-        setResultsShow={setResultsShow}
-        array={array}
-        userInput={userInput}
-        setUserInput={setUserInput}
-      />
-      <ResultsModal
-        show={resultsShow}
-        onHide={() => setResultsShow(false)}
-        questionsArray={array}
-        userInput={userInput}
-      />
-  </>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+        <LogInModal
+          auth={auth}
+          setUser={setUser} 
+          />
+        </Route>
+        <Route exact path="/profile">
+        {user && user.email}
+
+        <ProfileModal />
+        </Route>
+        <Route exact path="/signup">
+        <SignUpModal 
+          auth={auth}
+          setUser={setUser}
+          />
+        </Route>
+        <Route exact path="/quiz">
+        <QuizModal 
+          array={array}
+          userInput={userInput}
+        />
+        </Route>
+        <Route exact path="/results">
+        <ResultsModal 
+          questionsArray={array}
+          userInput={userInput}
+        />
+        </Route>
+      </Switch>
+  </Router>
   )
 }
 
@@ -90,10 +135,46 @@ export default App;
 
 function LogInModal(props) {
 
+  const [login, setLogin] = useState("false")
+
+  function loginFormSubmitHandler() {
+
+    const loginForm = document.querySelector('.login')
+
+    const email = loginForm.email.value
+
+    const password = loginForm.password.value
+
+    signInWithEmailAndPassword(props.auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log(user);
+      loginForm.reset()
+      props.setUser(user);
+      setLogin("true")
+      console.log(login)
+      const db = getDatabase();
+      const userREF = ref(db, "users/" + user.uid)
+      set(userREF, {
+        quizresults: [1, 2, 3]
+      });
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(errorMessage)
+    });
+
+  }
+
+
+
   return (
     <Modal
-      {...props}
       size="lg"
+      show={true}
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -101,33 +182,77 @@ function LogInModal(props) {
     >
       <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
+          Log In
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>Login Modal</h4>
-        <p>
-          Should have a sign up button
-        </p>
+      <Form className="login">
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control type="email" name="email" placeholder="Enter email" />
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" name="password" placeholder="Password" />
+        </Form.Group>
+      </Form>
       </Modal.Body>
       <Modal.Footer>
-      <Button variant="primary" onClick={() => {props.setSignUpShow(true); props.onHide()}}>
+        <Link to="/signup">
+        <Button variant="primary">
           SignUp
        </Button>
-      <Button variant="primary" onClick={() => {props.setProfileShow(true); props.onHide()}}>
+        </Link>
+      <Link to="/profile">
+      <Button variant="primary" onClick={() => loginFormSubmitHandler()}>
           Login
        </Button>
+      </Link>
+      
       </Modal.Footer>
     </Modal>
   );
 }
 
 function SignUpModal(props) {
+  
+
+  function signupFormSubmitHandler() {
+
+    const signupForm = document.querySelector('.signup')
+
+    const email = signupForm.email.value
+
+    const password = signupForm.password.value
+    
+
+    createUserWithEmailAndPassword(props.auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(user);
+        signupForm.reset()
+        props.setUser(user);
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(error);
+        // ..
+      });
+
+    }
+
 
   return (
     <Modal
       {...props}
       size="lg"
+      show={true}
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -135,19 +260,32 @@ function SignUpModal(props) {
     >
       <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
+          Sign Up
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>SignUp Modal</h4>
-        <p>
-          Input fields...
-        </p>
+      <Form className='signup'>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control type="email" name="email" placeholder="Enter email" />
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" name="password" placeholder="Password" />
+        </Form.Group>
+      </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={() => {props.setProfileShow(true); props.onHide()}}>
+        <Link to="/profile">
+        <Button variant="primary" onClick={() => signupFormSubmitHandler()}>
           Sign Up
        </Button>
+        </Link>
+        
       </Modal.Footer>
     </Modal>
   );
@@ -159,6 +297,7 @@ function ProfileModal(props) {
     <Modal
       {...props}
       size="lg"
+      show={true}
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -176,9 +315,12 @@ function ProfileModal(props) {
         </p>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={() => {props.setQuizShow(true); props.onHide()}}>
+        <Link to="/quiz">
+        <Button variant="primary">
           Start Quiz
        </Button>
+        </Link>
+        
       </Modal.Footer>
     </Modal>
   );
@@ -236,8 +378,6 @@ function handleChange(answerId, questionIndex) {
 
   function submitBtnHandler() {
     totalMark();
-    props.setResultsShow(true);
-    props.onHide()
   }
 
   
@@ -246,6 +386,7 @@ function handleChange(answerId, questionIndex) {
     <Modal
       {...props}
       size="lg"
+      show={true}
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -280,7 +421,9 @@ function handleChange(answerId, questionIndex) {
       <Modal.Footer>
         <Button id="previous-question-btn" onClick={minusOneFromIndex}>Previous Question</Button>
         <Button onClick={nextBtnHandler}>Next Question</Button>
-        <Button onClick={submitBtnHandler}>Submit Quiz</Button>
+        <Link to="/results">
+          <Button onClick={submitBtnHandler}>Submit Quiz</Button>
+        </Link>
         
       </Modal.Footer>
     </Modal>
@@ -316,6 +459,7 @@ let correctAnswer = '';
     <Modal
       {...props}
       size="lg"
+      show={true}
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
