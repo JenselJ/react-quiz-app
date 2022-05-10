@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Stack, Container, Modal, Form } from 'react-bootstrap';
+import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from 'react-router-dom'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+  onAuthStateChanged, } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
+import {createContext, useContext} from 'react'
+
 
 
 
@@ -31,18 +35,74 @@ const firebaseConfig = {
   const analytics = getAnalytics(app);
   const database = getDatabase(app);
 
+  // Initialize Firebase Authentication and get a reference to the service
+  const auth = getAuth(app);
 
+
+
+  const UserContext = createContext()
+
+  export const AuthContextProvider = ({children}) => {
+    const [user, setUser] = useState()
+  
+    const createUser = (email, password) => {
+      console.log("calling create user")
+      return createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        setUser(user)
+        console.log(user)
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage)
+        // ..
+      });
+    }
+  
+    const loginUser = (email, password) => {
+      console.log("calling login user")
+      return signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        setUser(user)
+        console.log(user)
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage)
+        // ..
+      });
+    }
+    
+
+    return (
+      <UserContext.Provider value={{createUser, user, loginUser}}>
+        {children}
+      </UserContext.Provider>
+    )
+  }
+  
+  export const UserAuth = () => {
+    return useContext(UserContext)
+  }
 
 
 function App() {
 
 
   
-  // Initialize Firebase Authentication and get a reference to the service
-  const auth = getAuth(app);
+
 
   const [user, setUser] = useState();
 
+  const navigate = useNavigate()
 
 
 
@@ -95,39 +155,47 @@ function App() {
 
 
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-        <LogInModal
-          auth={auth}
-          setUser={setUser} 
-          />
-        </Route>
-        <Route exact path="/profile">
-        {user && user.email}
-
-        <ProfileModal />
-        </Route>
-        <Route exact path="/signup">
-        <SignUpModal 
-          auth={auth}
-          setUser={setUser}
-          />
-        </Route>
-        <Route exact path="/quiz">
-        <QuizModal 
-          array={array}
-          userInput={userInput}
-        />
-        </Route>
-        <Route exact path="/results">
-        <ResultsModal 
-          questionsArray={array}
-          userInput={userInput}
-        />
-        </Route>
-      </Switch>
-  </Router>
+    <AuthContextProvider>
+      <Router>
+              {/* <Route 
+                exact path="/"
+                element={<LogInModal
+                  auth={auth}
+                  setUser={setUser}
+                  />}
+              /> */}
+              <Route exact path="/">
+              <LogInModal
+                auth={auth}
+                setUser={setUser}
+                navigate={navigate} 
+                />
+              </Route>
+              <Route exact path="/profile">
+              {user && user.email}
+              <ProfileModal />
+              </Route>
+              <Route exact path="/signup">
+              <SignUpModal 
+                auth={auth}
+                navigate={navigate}
+                />
+              </Route>
+              <Route exact path="/quiz">
+              <QuizModal 
+                array={array}
+                userInput={userInput}
+              />
+              </Route>
+              <Route exact path="/results">
+              <ResultsModal 
+                questionsArray={array}
+                userInput={userInput}
+              />
+              </Route>
+        </Router>
+    </AuthContextProvider>
+    
   )
 }
 
@@ -137,38 +205,59 @@ function LogInModal(props) {
 
   const [login, setLogin] = useState("false")
 
-  function loginFormSubmitHandler() {
+  // function loginFormSubmitHandler() {
 
-    const loginForm = document.querySelector('.login')
+  //   const loginForm = document.querySelector('.login')
 
-    const email = loginForm.email.value
+  //   const email = loginForm.email.value
 
-    const password = loginForm.password.value
+  //   const password = loginForm.password.value
 
-    signInWithEmailAndPassword(props.auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      console.log(user);
-      loginForm.reset()
-      props.setUser(user);
-      setLogin("true")
-      console.log(login)
-      const db = getDatabase();
-      const userREF = ref(db, "users/" + user.uid)
-      set(userREF, {
-        quizresults: [1, 2, 3]
-      });
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorMessage)
-    });
+  //   signInWithEmailAndPassword(props.auth, email, password)
+  //   .then((userCredential) => {
+  //     // Signed in 
+  //     const user = userCredential.user;
+  //     console.log(user);
+  //     loginForm.reset()
+  //     props.setUser(user);
+  //     setLogin("true")
+  //     console.log(login)
+  //     const db = getDatabase();
+  //     const userREF = ref(db, "users/" + user.uid)
+  //     set(userREF, {
+  //       quizresults: [1, 2, 3]
+  //     });
+  //     // ...
+  //   })
+  //   .catch((error) => {
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+  //     alert(errorMessage)
+  //   });
 
+  // }
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const { loginUser } = UserAuth()
+
+
+  const handleSubmit = async (e) => {
+    console.log("handle submit")
+    e.preventDefault()
+    setError('')
+    try{
+      await loginUser(email, password)
+      props.useNavigate('/profile')
+      // navigate to the profile screen if successful
+    
+    } catch (error) {
+      setError(error.message)
+      alert(error.message)
+    }
   }
-
 
 
   return (
@@ -185,20 +274,19 @@ function LogInModal(props) {
           Log In
         </Modal.Title>
       </Modal.Header>
+    <Form className="login" onSubmit={handleSubmit}>
       <Modal.Body>
-      <Form className="login">
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" name="email" placeholder="Enter email" />
+          <Form.Control type="email" name="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)}/>
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" name="password" placeholder="Password" />
+          <Form.Control type="password" name="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
         </Form.Group>
-      </Form>
       </Modal.Body>
       <Modal.Footer>
         <Link to="/signup">
@@ -206,48 +294,39 @@ function LogInModal(props) {
           SignUp
        </Button>
         </Link>
-      <Link to="/profile">
-      <Button variant="primary" onClick={() => loginFormSubmitHandler()}>
+      <Button variant="primary" type="submit">
           Login
-       </Button>
-      </Link>
-      
+       </Button>      
       </Modal.Footer>
+    </Form>
+
     </Modal>
   );
 }
 
 function SignUpModal(props) {
-  
 
-  function signupFormSubmitHandler() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-    const signupForm = document.querySelector('.signup')
+  const { createUser } = UserAuth()
 
-    const email = signupForm.email.value
-
-    const password = signupForm.password.value
+  const handleSubmit = async (e) => {
+    console.log("handle submit")
+    e.preventDefault()
+    setError('')
+    try{
+      await createUser(email, password)
+      props.useNavigate('/profile')
+      // navigate to the profile screen if successful
     
-
-    createUserWithEmailAndPassword(props.auth, email, password)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        console.log(user);
-        signupForm.reset()
-        props.setUser(user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(error);
-        // ..
-      });
-
+    } catch (error) {
+      setError(error.message)
+      alert(error.message)
     }
-
-
+  }
+  
   return (
     <Modal
       {...props}
@@ -263,11 +342,12 @@ function SignUpModal(props) {
           Sign Up
         </Modal.Title>
       </Modal.Header>
+      <Form className='signup' onSubmit={handleSubmit}>
+
       <Modal.Body>
-      <Form className='signup'>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" name="email" placeholder="Enter email" />
+          <Form.Control required type="email" name="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text>
@@ -275,18 +355,18 @@ function SignUpModal(props) {
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" name="password" placeholder="Password" />
+          <Form.Control required type="password" name="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
         </Form.Group>
-      </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Link to="/profile">
-        <Button variant="primary" onClick={() => signupFormSubmitHandler()}>
+        <Button type="submit" variant="primary">
           Sign Up
-       </Button>
-        </Link>
+        </Button>
+       
         
       </Modal.Footer>
+      </Form>
+
     </Modal>
   );
 }
