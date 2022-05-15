@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged, } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
@@ -38,7 +38,20 @@ const firebaseConfig = {
   // Initialize Firebase Authentication and get a reference to the service
   const auth = getAuth(app);
 
-
+  function RequireAuth({ children }) {
+    const { user } = UserAuth()
+    let location = useLocation();
+  
+    if (!user) {
+      // Redirect them to the /login page, but save the current location they were
+      // trying to go to when they were redirected. This allows us to send them
+      // along to that page after they login, which is a nicer user experience
+      // than dropping them off on the home page.
+      return <Navigate to="/" state={{ from: location }} replace />;
+    }
+  
+    return children;
+  }
 
   const UserContext = createContext()
 
@@ -102,7 +115,6 @@ function App() {
 
   const [user, setUser] = useState();
 
-  const navigate = useNavigate()
 
 
 
@@ -157,18 +169,52 @@ function App() {
   return (
     <AuthContextProvider>
       <Router>
-              {/* <Route 
+        <Routes>
+           <Route 
                 exact path="/"
                 element={<LogInModal
                   auth={auth}
                   setUser={setUser}
                   />}
-              /> */}
-              <Route exact path="/">
+              />
+              <Route 
+                exact path="/profile"
+                element={
+                <RequireAuth>
+                  <ProfileModal/>
+                </RequireAuth>
+              }
+              />
+
+              <Route 
+                exact path="/signup"
+                element={<SignUpModal
+                  auth={auth}
+                  setUser={setUser}
+                  />}
+              />
+
+              <Route 
+                exact path="/quiz"
+                element={<QuizModal
+                  array={array}
+                  userInput={userInput}
+                  />}
+              />
+
+              <Route 
+                exact path="/results"
+                element={<ResultsModal
+                  questionsArray={array}
+                  userInput={userInput}
+                  />}
+              />            
+              
+
+              {/* <Route exact path="/">
               <LogInModal
                 auth={auth}
                 setUser={setUser}
-                navigate={navigate} 
                 />
               </Route>
               <Route exact path="/profile">
@@ -178,7 +224,6 @@ function App() {
               <Route exact path="/signup">
               <SignUpModal 
                 auth={auth}
-                navigate={navigate}
                 />
               </Route>
               <Route exact path="/quiz">
@@ -192,7 +237,10 @@ function App() {
                 questionsArray={array}
                 userInput={userInput}
               />
-              </Route>
+              </Route> */}
+
+
+          </Routes>
         </Router>
     </AuthContextProvider>
     
@@ -202,6 +250,7 @@ function App() {
 export default App;
 
 function LogInModal(props) {
+  const navigate = useNavigate()
 
   const [login, setLogin] = useState("false")
 
@@ -250,7 +299,7 @@ function LogInModal(props) {
     setError('')
     try{
       await loginUser(email, password)
-      props.useNavigate('/profile')
+      navigate('/profile')
       // navigate to the profile screen if successful
     
     } catch (error) {
@@ -309,6 +358,7 @@ function SignUpModal(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const { createUser } = UserAuth()
 
@@ -318,7 +368,7 @@ function SignUpModal(props) {
     setError('')
     try{
       await createUser(email, password)
-      props.useNavigate('/profile')
+      navigate('/profile')
       // navigate to the profile screen if successful
     
     } catch (error) {
