@@ -33,7 +33,7 @@ const firebaseConfig = {
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-  const database = getDatabase(app);
+  
 
   // Initialize Firebase Authentication and get a reference to the service
   const auth = getAuth(app);
@@ -79,10 +79,10 @@ const firebaseConfig = {
     const loginUser = (email, password) => {
       console.log("calling login user")
       return signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        setUser(user)
+        await setUser(user)
         console.log(user)
         // ...
       })
@@ -105,7 +105,6 @@ const firebaseConfig = {
   export const UserAuth = () => {
     return useContext(UserContext)
   }
-
 
 function App() {
 
@@ -252,7 +251,6 @@ export default App;
 function LogInModal(props) {
   const navigate = useNavigate()
 
-  const [login, setLogin] = useState("false")
 
   // function loginFormSubmitHandler() {
 
@@ -290,21 +288,27 @@ function LogInModal(props) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const { loginUser } = UserAuth()
+  const { loginUser, user } = UserAuth()
 
 
   const handleSubmit = async (e) => {
     console.log("handle submit")
     e.preventDefault()
     setError('')
-    try{
+    try {
       await loginUser(email, password)
+      // console.log(user)
+      // const db = getDatabase(app);  
+      // const reference = ref(db, "users/" + user.uid)
+      // set(reference, {
+      //   quizResults: [0, 1, 2]
+      // })
       navigate('/profile')
       // navigate to the profile screen if successful
-    
     } catch (error) {
       setError(error.message)
       alert(error.message)
+      console.error(error)
     }
   }
 
@@ -423,6 +427,19 @@ function SignUpModal(props) {
 
 function ProfileModal(props) {
 
+  // function writeUserData(email, password) {
+  //   const db = getDatabase(app);
+
+  //   console.log("in function")
+  
+  //   const reference = ref(db, "test/" + user.uid)
+  
+  //   set(reference, {
+  //     email: email,
+  //     password: password
+  //   })
+  // }
+  
   return (
     <Modal
       {...props}
@@ -450,6 +467,9 @@ function ProfileModal(props) {
           Start Quiz
        </Button>
         </Link>
+      {/* <Button onClick={()=> {writeUserData("tomdizon", "tom.dizon@gmail.com", "tomdizonpw")}}>
+        Add User
+      </Button> */}
         
       </Modal.Footer>
     </Modal>
