@@ -4,7 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-  onAuthStateChanged, } from "firebase/auth";
+  onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 import {createContext, useContext} from 'react'
 import LogInModal from './Components/LogInModal';
@@ -36,7 +36,7 @@ const firebaseConfig = {
 };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+  export const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   
 
@@ -99,9 +99,22 @@ const firebaseConfig = {
       });
     }
     
+    const resetPassword = (email) => {
+      return sendPasswordResetEmail(auth, email)
+      .then(() => {
+        console.log("Password reset email sent!")
+        // ..
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+    }
+
 
     return (
-      <UserContext.Provider value={{createUser, user, loginUser}}>
+      <UserContext.Provider value={{createUser, user, loginUser, resetPassword}}>
         {children}
       </UserContext.Provider>
     )

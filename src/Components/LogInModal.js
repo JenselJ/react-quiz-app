@@ -45,7 +45,7 @@ export default function LogInModal(props) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const { loginUser, user } = UserAuth()
+  const { loginUser, user, resetPassword } = UserAuth()
 
 
   const handleSubmit = async (e) => {
@@ -62,6 +62,17 @@ export default function LogInModal(props) {
       // })
       navigate('/profile')
       // navigate to the profile screen if successful
+    } catch (error) {
+      setError(error.message)
+      alert(error.message)
+      console.error(error)
+    }
+  }
+
+  const forgotPassword = async () => {
+    try {
+      console.log("in forgotPassword function")
+      await resetPassword(email)
     } catch (error) {
       setError(error.message)
       alert(error.message)
@@ -106,6 +117,9 @@ export default function LogInModal(props) {
         </Link>
       <Button variant="primary" type="submit">
           Login
+       </Button> 
+       <Button variant="primary" onClick={()=>{forgotPassword(email)}}>
+          Forgot Password
        </Button>      
       </Modal.Footer>
     </Form>

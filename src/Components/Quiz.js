@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-rout
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-  onAuthStateChanged, } from "firebase/auth";
+  onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 import app from "../App"
 
