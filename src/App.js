@@ -12,6 +12,7 @@ import SignUpModal from './Components/SignUpModal';
 import ProfileModal from './Components/Profile';
 import QuizModal from './Components/Quiz';
 import ResultsModal from './Components/Results';
+import ResetPasswordModal from './Components/ResetPassword';
 
 
 
@@ -202,6 +203,12 @@ function App() {
                 </RequireAuth>
               }
               />
+              <Route 
+                exact path="/resetpassword"
+                element={
+                  <ResetPasswordModal/>
+              }
+              />
 
               <Route 
                 exact path="/signup"
@@ -217,6 +224,7 @@ function App() {
                   array={array}
                   userInput={userInput}
                   setUserInput={setUserInput}
+                  firebaseApp={app}
                   />}
               />
 

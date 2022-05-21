@@ -118,9 +118,11 @@ export default function LogInModal(props) {
       <Button variant="primary" type="submit">
           Login
        </Button> 
+       <Link to="/resetpassword">
        <Button variant="primary" onClick={()=>{forgotPassword(email)}}>
           Forgot Password
-       </Button>      
+       </Button>
+       </Link>      
       </Modal.Footer>
     </Form>
 

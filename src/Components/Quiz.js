@@ -6,7 +6,6 @@ import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
-import app from "../App"
 
 export default function QuizModal(props) {
 
@@ -55,10 +54,11 @@ function handleChange(answerId, questionIndex) {
     const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
     console.log(`${mark} out of 3`);
     
-    const db = getDatabase(app);  
+    const db = getDatabase(props.firebaseApp);  
     const reference = ref(db, "users/" + user.uid)
     set(reference, {
-      quizResults: mark
+      quizResults: mark,
+      date: Date.now()
     })
     return mark
   }
