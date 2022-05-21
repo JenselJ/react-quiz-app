@@ -3,6 +3,10 @@ import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
+import { getDatabase, ref, set, onValue } from "firebase/database";
+import { updateCurrentUser } from 'firebase/auth';
+import { useEffect } from 'react';
+
 
 
 export default function ProfileModal(props) {
@@ -19,7 +23,39 @@ export default function ProfileModal(props) {
   //     password: password
   //   })
   // }
-  const { user } = UserAuth()
+  const { user, logout } = UserAuth()
+  const navigate = useNavigate()
+
+
+  useEffect(() => {
+    const db = getDatabase(props.firebaseapp);
+    onValue(ref(db, "/users" + user.uid), (snapshot) => {
+      const data = snapshot.val();
+      console.log(data)
+    })
+  }, [])
+
+
+  function prevResults() {
+    console.log("in function")
+    const db = getDatabase(props.firebaseapp);
+    const quizResultsRef = ref(db, "/users" + user.uid + "/quizResults");
+    onValue(quizResultsRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data)
+    })
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+      console.log("You are logged out")
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  
   
   return (
     <Modal
@@ -48,6 +84,12 @@ export default function ProfileModal(props) {
           Start Quiz
        </Button>
         </Link>
+        <Button variant="primary" onClick={() => prevResults()}>
+          Show previous results
+       </Button>
+       <Button variant="primary" onClick={() => handleLogout()}>
+          Logout
+       </Button>
       {/* <Button onClick={()=> {writeUserData("tomdizon", "tom.dizon@gmail.com", "tomdizonpw")}}>
         Add User
       </Button> */}

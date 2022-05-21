@@ -113,9 +113,13 @@ const firebaseConfig = {
       });
     }
 
+    const logout = () => {
+      return signOut(auth)
+    }
+
 
     return (
-      <UserContext.Provider value={{createUser, user, loginUser, resetPassword}}>
+      <UserContext.Provider value={{createUser, user, loginUser, resetPassword, logout}}>
         {children}
       </UserContext.Provider>
     )
@@ -199,7 +203,9 @@ function App() {
                 exact path="/profile"
                 element={
                 <RequireAuth>
-                  <ProfileModal/>
+                  <ProfileModal
+                    firebaseapp={app}
+                  />
                 </RequireAuth>
               }
               />
@@ -224,7 +230,7 @@ function App() {
                   array={array}
                   userInput={userInput}
                   setUserInput={setUserInput}
-                  firebaseApp={app}
+                  firebaseapp={app}
                   />}
               />
 

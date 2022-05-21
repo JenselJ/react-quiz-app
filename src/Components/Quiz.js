@@ -54,7 +54,7 @@ function handleChange(answerId, questionIndex) {
     const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
     console.log(`${mark} out of 3`);
     
-    const db = getDatabase(props.firebaseApp);  
+    const db = getDatabase(props.firebaseapp);  
     const reference = ref(db, "users/" + user.uid)
     set(reference, {
       quizResults: mark,
