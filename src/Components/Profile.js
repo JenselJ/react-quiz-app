@@ -3,7 +3,7 @@ import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getDatabase, ref, get, child } from "firebase/database";
 import { updateCurrentUser } from 'firebase/auth';
 import { useEffect } from 'react';
 
@@ -25,26 +25,26 @@ export default function ProfileModal(props) {
   // }
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
+  const [userResultsData, setUserResultsData] = useState()
 
 
   useEffect(() => {
+    console.log("use effect")
     const db = getDatabase(props.firebaseapp);
-    onValue(ref(db, "/users" + user.uid), (snapshot) => {
-      const data = snapshot.val();
-      console.log(data)
-    })
+    console.log(db)
+    console.log(user)
+    const dbRef = ref(db);
+    get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val()
+        setUserResultsData(data)
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
   }, [])
-
-
-  function prevResults() {
-    console.log("in function")
-    const db = getDatabase(props.firebaseapp);
-    const quizResultsRef = ref(db, "/users" + user.uid + "/quizResults");
-    onValue(quizResultsRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log(data)
-    })
-  }
 
   const handleLogout = async () => {
     try {
@@ -56,7 +56,7 @@ export default function ProfileModal(props) {
     }
   }
   
-  
+
   return (
     <Modal
       {...props}
@@ -76,6 +76,9 @@ export default function ProfileModal(props) {
         <h4>Profile Modal {user.uid}</h4>
         <p>
           Shows previous quiz attempt results...
+          { userResultsData && 
+            <p> {JSON.stringify(userResultsData)} </p>
+          }
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -84,9 +87,7 @@ export default function ProfileModal(props) {
           Start Quiz
        </Button>
         </Link>
-        <Button variant="primary" onClick={() => prevResults()}>
-          Show previous results
-       </Button>
+        
        <Button variant="primary" onClick={() => handleLogout()}>
           Logout
        </Button>
