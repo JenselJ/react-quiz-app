@@ -5,7 +5,7 @@ import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, DatabaseReference, String, push, child, update } from "firebase/database";
 
 export default function QuizModal(props) {
 
@@ -56,11 +56,30 @@ function handleChange(answerId, questionIndex) {
     
     const db = getDatabase(props.firebaseapp);  
     const reference = ref(db, "users/" + user.uid)
-    set(reference, {
+    // set(reference, {
+    //   quizResults: mark,
+    //   date: Date.now()
+    // })
+    // return mark
+
+    const postData = {
       quizResults: mark,
       date: Date.now()
-    })
-    return mark
+    };
+
+    console.log(postData)
+  
+    // Get a key for a new Post.
+    const newPostKey = push(child(ref(db, "users/" + user.uid), "users")).key; 
+
+    console.log(newPostKey)
+  
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    const updates = {};
+    updates['users/' + user.uid + newPostKey] = postData;
+    console.log(postData)
+  
+    return update(ref(db, "users/" + user.uid), updates);
   }
 
   function submitBtnHandler() {
