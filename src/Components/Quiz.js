@@ -55,31 +55,43 @@ function handleChange(answerId, questionIndex) {
     console.log(`${mark} out of 3`);
     
     const db = getDatabase(props.firebaseapp);  
-    const reference = ref(db, "users/" + user.uid)
+    // const reference = ref(db, "users/" + user.uid)
+
+    // Create a new post reference with an auto-generated id
+      const postListRef = ref(db, "users/" + user.uid);
+      const newPostRef = push(postListRef);
+      set(newPostRef, {
+        quizResults: mark,
+        date: Date.now()
+      });
+
+    // set a first instance of data
     // set(reference, {
     //   quizResults: mark,
     //   date: Date.now()
     // })
     // return mark
 
-    const postData = {
-      quizResults: mark,
-      date: Date.now()
-    };
 
-    console.log(postData)
-  
-    // Get a key for a new Post.
-    const newPostKey = push(child(ref(db, "users/" + user.uid), "users")).key; 
+    // add data under a new unique key
+    // const postData = {
+    //   quizResults: mark,
+    //   date: Date.now()
+    // };
 
-    console.log(newPostKey)
+    // console.log(postData)
   
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    const updates = {};
-    updates['users/' + user.uid + newPostKey] = postData;
-    console.log(postData)
+    // // Get a key for a new Post.
+    // const newPostKey = push(child(ref(db, "users/" + user.uid), "users")).key; 
+
+    // console.log(newPostKey)
   
-    return update(ref(db, "users/" + user.uid), updates);
+    // // Write the new post's data simultaneously in the posts list and the user's post list.
+    // const updates = {};
+    // updates['users/' + user.uid + newPostKey] = postData;
+    // console.log(postData)
+  
+    // return update(ref(db, "users/" + user.uid), updates);
   }
 
   function submitBtnHandler() {
