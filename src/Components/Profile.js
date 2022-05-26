@@ -26,6 +26,7 @@ export default function ProfileModal(props) {
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
   const [userResultsData, setUserResultsData] = useState()
+  const [displayData, setDisplayData] = useState()
 
 
   useEffect(() => {
@@ -38,6 +39,13 @@ export default function ProfileModal(props) {
       if (snapshot.exists()) {
         const data = snapshot.val()
         setUserResultsData(data)
+        console.log(data)
+        console.log(data)
+        console.log(userResultsData);
+        Object.keys(userResultsData).map(function(key, value) 
+                  {
+                    console.log(userResultsData[key])
+                  })
       } else {
         console.log("No data available");
       }
@@ -76,9 +84,13 @@ export default function ProfileModal(props) {
         <h4>Profile Modal {user.uid}</h4>
         <p>
           Shows previous quiz attempt results...
-          { userResultsData && 
-            <p> {JSON.stringify(userResultsData)} </p>
-          }
+        <ul>
+          {/* {Object.keys(userResultsData).map(function(key, value) 
+                  {
+                    <li> {userResultsData[key]} </li>
+                  })} */}
+        </ul>
+            
         </p>
       </Modal.Body>
       <Modal.Footer>

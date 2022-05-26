@@ -136,6 +136,7 @@ function App() {
 
 
   const [user, setUser] = useState();
+  const [resultsKey, setResultsKey] = useState();
 
 
 
@@ -231,6 +232,7 @@ function App() {
                   userInput={userInput}
                   setUserInput={setUserInput}
                   firebaseapp={app}
+                  setResultsKey={setResultsKey}
                   />}
               />
 

@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set, DatabaseReference, String, push, child, update } from "firebase/database";
+import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get } from "firebase/database";
 
 export default function QuizModal(props) {
 
   const { user } = UserAuth()
   const [arrayIndex, setArrayIndex] = useState(0);
+  const [userResultsData, setUserResultsData] = useState([])
+
+
+  useEffect(() => {
+    console.log("use effect")
+    const db = getDatabase(props.firebaseapp);
+    const dbRef = ref(db);
+    get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val()
+        setUserResultsData(data)
+        console.log(data)
+        console.log(userResultsData)
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }, [])
 
 function handleChange(answerId, questionIndex) {
   console.log(answerId, questionIndex)
@@ -53,9 +73,22 @@ function handleChange(answerId, questionIndex) {
    */
     const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
     console.log(`${mark} out of 3`);
+
+    // setUserResultsData.push({
+    //   quizResults: mark,
+    //     date: Date.now()
+    // })
+
+    // console.log(userResultsData)
     
     const db = getDatabase(props.firebaseapp);  
     // const reference = ref(db, "users/" + user.uid)
+    // set(reference, {
+    //   userResultsData
+    //   })
+    //   return mark
+
+
 
     // Create a new post reference with an auto-generated id
       const postListRef = ref(db, "users/" + user.uid);
@@ -64,6 +97,8 @@ function handleChange(answerId, questionIndex) {
         quizResults: mark,
         date: Date.now()
       });
+      console.log(newPostRef.key)
+      
 
     // set a first instance of data
     // set(reference, {
