@@ -5,9 +5,9 @@ import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get, orderByChild, query } from "firebase/database";
+import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get } from "firebase/database";
 
-export default function QuizModal(props) {
+export default function QuizTwoModal(props) {
 
   const { user } = UserAuth()
   const [arrayIndex, setArrayIndex] = useState(0);
@@ -97,7 +97,7 @@ function handleChange(answerId, questionIndex) {
         quizResults: mark,
         date: Date.now()
       });
-      
+      console.log(newPostRef.key)
       
 
     // set a first instance of data
@@ -131,27 +131,6 @@ function handleChange(answerId, questionIndex) {
 
   function submitBtnHandler() {
     totalMark();
-    newScore();
-  }
-
-  function newScore() {
-
-    console.log("newScore function")
-    const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
-    const db = getDatabase(props.firebaseapp);  
-
-
-    const postScoreRef = ref(db, "allscores/");
-        const newScoreRef = push(postScoreRef);
-        set(newScoreRef, {
-          email: user.email,
-          quizResults: mark,
-          date: Date.now()
-        });
-
-        const topUserPostsRef = query(ref(db, 'allscores'), orderByChild('quizResults'));
-        topUserPostsRef();
-        
   }
 
   

@@ -25,7 +25,7 @@ export default function ProfileModal(props) {
   // }
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
-  const [userResultsData, setUserResultsData] = useState()
+  const [userResultsData, setUserResultsData] = useState({})
   const [displayData, setDisplayData] = useState()
 
 
@@ -40,12 +40,8 @@ export default function ProfileModal(props) {
         const data = snapshot.val()
         setUserResultsData(data)
         console.log(data)
-        console.log(data)
-        console.log(userResultsData);
-        Object.keys(userResultsData).map(function(key, value) 
-                  {
-                    console.log(userResultsData[key])
-                  })
+       
+       
       } else {
         console.log("No data available");
       }
@@ -84,22 +80,27 @@ export default function ProfileModal(props) {
         <h4>Profile Modal {user.uid}</h4>
         <p>
           Shows previous quiz attempt results...
-        <ul>
-          {/* {Object.keys(userResultsData).map(function(key, value) 
-                  {
-                    <li> {userResultsData[key]} </li>
-                  })} */}
-        </ul>
             
         </p>
+
+        <ul>
+         
+          {Object.values(userResultsData).map(value => (
+          <li> {value.date}, {value.quizResults} </li>)
+          )}
+        </ul>
       </Modal.Body>
       <Modal.Footer>
         <Link to="/quiz">
         <Button variant="primary">
-          Start Quiz
+          Start Quiz 1
        </Button>
         </Link>
-        
+        <Link to="/quiztwo">
+        <Button variant="primary">
+          Start Quiz 2
+       </Button>
+        </Link>
        <Button variant="primary" onClick={() => handleLogout()}>
           Logout
        </Button>

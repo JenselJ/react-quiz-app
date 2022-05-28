@@ -13,6 +13,7 @@ import ProfileModal from './Components/Profile';
 import QuizModal from './Components/Quiz';
 import ResultsModal from './Components/Results';
 import ResetPasswordModal from './Components/ResetPassword';
+import QuizTwoModal from './Components/Quiz2';
 
 
 
@@ -186,6 +187,42 @@ function App() {
     }
   ]
 
+  let arrayTwo = [
+    {
+      question: "What does http stand for?",
+      answers: [
+        { id: 0, text: "Hypertext Transmission Procedure"},
+        { id: 1, text: "Hypertext Transfer Protocol"},
+        { id: 2, text: "Haemoglobin Tetrameter Transfusion Protein"},
+        { id: 3, text: "Happy to tell People"}
+      ],
+      correctAnswerIndex: 1,
+      explanation: "Hypertext Transfer Protocol (HTTP) is the foundation of the World Wide Web, and is used to load web pages using hypertext links."
+    },
+    {
+      question: "What does the DOM stand for?",
+      answers: [
+        { id: 0, text: "Department of Management"},
+        { id: 1, text: "Decoded Object Management"},
+        { id: 2, text: "Documented Online Model"},
+        { id: 3, text: "Document Object Model"}
+      ],
+      correctAnswerIndex: 3,
+      explanation: "The Document Object Model (DOM) is an application programming interface (API) for HTML and XML documents. It defines the logical structure of documents and the way a document is accessed and manipulated."
+    },
+    {
+      question: "What are the four methods of a CRUD database?",
+      answers: [
+        { id: 0, text: "Create, Read, Update, Delete"},
+        { id: 1, text: "Create, Reduce, URL, Direct"},
+        { id: 2, text: "Console, Recorder, URL, Display"},
+        { id: 3, text: "Console, React, Update, Display"}
+      ],
+      correctAnswerIndex: 0,
+      explanation: "CRUD is an acronym that comes from the world of computer programming and refers to the four functions that are considered necessary to implement a persistent storage application: create, read, update and delete."
+    }
+  ]
+
 
 
 
@@ -203,11 +240,11 @@ function App() {
               <Route 
                 exact path="/profile"
                 element={
-                <RequireAuth>
+                // <RequireAuth>
                   <ProfileModal
                     firebaseapp={app}
                   />
-                </RequireAuth>
+                // </RequireAuth>
               }
               />
               <Route 
@@ -233,6 +270,18 @@ function App() {
                   setUserInput={setUserInput}
                   firebaseapp={app}
                   setResultsKey={setResultsKey}
+                  user={user}
+                  auth={auth}
+                  />}
+              />
+
+              <Route 
+                exact path="/quiztwo"
+                element={<QuizTwoModal
+                  array={array}
+                  userInput={userInput}
+                  setUserInput={setUserInput}
+                  firebaseapp={app}
                   />}
               />
 
