@@ -5,7 +5,7 @@ import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get, orderByChild, query } from "firebase/database";
+import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get, orderByChild, query, onSnapshot } from "firebase/database";
 
 export default function QuizModal(props) {
 
@@ -131,28 +131,53 @@ function handleChange(answerId, questionIndex) {
 
   function submitBtnHandler() {
     totalMark();
-    newScore();
+    // newScore();
   }
 
-  function newScore() {
+  // function newScore() {
 
-    console.log("newScore function")
-    const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
-    const db = getDatabase(props.firebaseapp);  
+  //   console.log("newScore function")
+  //   const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
+  //   const db = getDatabase(props.firebaseapp);  
 
 
-    const postScoreRef = ref(db, "allscores/");
-        const newScoreRef = push(postScoreRef);
-        set(newScoreRef, {
-          email: user.email,
-          quizResults: mark,
-          date: Date.now()
-        });
+  //   const postScoreRef = ref(db, "allscores/");
+  //       const newScoreRef = push(postScoreRef);
+  //       set(newScoreRef, {
+  //         email: user.email,
+  //         quizResults: mark,
+  //         date: Date.now()
+  //       });
 
-        const topUserPostsRef = query(ref(db, 'allscores'), orderByChild('quizResults'));
-        topUserPostsRef();
+  //       const q = query(postScoreRef, orderByChild('quizResults', 'desc'))
+
+  //       console.log(q)
+
+  //       onSnapshot(q, (snapshot) => {
+  //         let scores = []
+  //         snapshot.docs.forEach((doc) => {
+  //           scores.push({ ...doc.data(), id: doc.id })
+  //         })
         
-  }
+  //         console.log(scores)
+  //       })
+
+        // const topUserPostsRef = query(ref(db, 'allscores'), orderByChild('quizResults'));
+
+        // get(topUserPostsRef)
+        // .then((snapshot) => {
+
+        //   let scores = []
+
+        //   snapshot.forEach(childSnapshot => {
+        //     scores.push(childSnapshot.val())
+        //   })
+
+        //   console.log(scores)
+
+        // })
+        
+  // }
 
   
 

@@ -48,6 +48,9 @@ export default function ProfileModal(props) {
     }).catch((error) => {
       console.error(error);
     });
+
+    
+
   }, [])
 
   const handleLogout = async () => {
