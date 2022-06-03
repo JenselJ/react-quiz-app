@@ -220,7 +220,63 @@ function App() {
       ],
       correctAnswerIndex: 0,
       explanation: "CRUD is an acronym that comes from the world of computer programming and refers to the four functions that are considered necessary to implement a persistent storage application: create, read, update and delete."
+    },
+    {
+      question: "Which one of these is not a http method?",
+      answers: [
+        { id: 0, text: "Send"},
+        { id: 1, text: "Put"},
+        { id: 2, text: "Patch"},
+        { id: 3, text: "Delete"}
+      ],
+      correctAnswerIndex: 0,
+      explanation: "Post, get, push, patch and delete are the primary HTTP methods, which correspond to create, read, update, and delete (or CRUD) operations, respectively. Send is a Ruby language method."
+    },
+    {
+      question: "What does the 200 status code represent?",
+      answers: [
+        { id: 0, text: "A request was successful and as a result, a resource has been created."},
+        { id: 1, text: "A request was received and understood and is being processed."},
+        { id: 2, text: "A requested page is not available."},
+        { id: 3, text: "A server understands a request but refuses to authorize it."}
+      ],
+      correctAnswerIndex: 1,
+      explanation: "A is what status code 201 represents, C is for status code 404 and D is for status code 403."
+    },
+    {
+      question: "Fill in the blank. A ternary operator is frequently used as alternative to a/an ______ statement.",
+      answers: [
+        { id: 0, text: "switch"},
+        { id: 1, text: "if... else"},
+        { id: 2, text: "getElementById"},
+        { id: 3, text: "const"}
+      ],
+      correctAnswerIndex: 1,
+      explanation: "The conditional (ternary) operator is the only JavaScript operator that takes three operands: a condition followed by a question mark (?), then an expression to execute if the condition is truthy followed by a colon (:), and finally the expression to execute if the condition is falsy."
+    },
+    {
+      question: "Which one of these is not a valid way to declare a JavaScript function?",
+      answers: [
+        { id: 0, text: "function myFunction() {}"},
+        { id: 1, text: "const isTruthy => function() {}"},
+        { id: 2, text: "const absValue = (number) => {}"},
+        { id: 3, text: "(function(variable) {return typeof variable; }).name"}
+      ],
+      correctAnswerIndex: 1,
+      explanation: "B is incorrect and the arrow function should be an equal sign: const isTruthy = function() {}. D is an anonymous function."
+    },
+    {
+      question: "Which one of these is not a valid way to declare a JavaScript function?",
+      answers: [
+        { id: 0, text: "function myFunction() {}"},
+        { id: 1, text: "const isTruthy => function() {}"},
+        { id: 2, text: "const absValue = (number) => {}"},
+        { id: 3, text: "(function(variable) {return typeof variable; }).name"}
+      ],
+      correctAnswerIndex: 1,
+      explanation: "B is incorrect and the arrow function should be an equal sign: const isTruthy = function() {}. D is an anonymous function."
     }
+
   ]
 
 

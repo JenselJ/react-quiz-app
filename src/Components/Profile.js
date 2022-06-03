@@ -31,7 +31,6 @@ export default function ProfileModal(props) {
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
   const [userResultsData, setUserResultsData] = useState({})
-  const [allScores, setAllScores] = useState({})
   const [displayScores, setDisplayScores] = useState({})
 
 
@@ -59,9 +58,11 @@ export default function ProfileModal(props) {
     get(child(dbRef, 'users')).then((snapshot) => {
       if (snapshot.exists()) {
         const allScoresData = snapshot.val()
-        setAllScores(allScoresData)
         console.log(allScoresData)
         console.log('data exists')
+        setDisplayScores(Object.entries(allScoresData).flatMap(score => {
+          return Object.values(score[1]).map(s => {return {...s, id: score[0]}})
+      }))
        
        
       } else {
@@ -71,9 +72,9 @@ export default function ProfileModal(props) {
       console.error(error);
     });
 
-    setDisplayScores(Object.entries(allScores).flatMap(score => {
-      return Object.values(score[1]).map(s => {return {...s, id: score[0]}})
-  }))
+    console.log("we are here")
+
+
 
   }, [])
 
