@@ -23,10 +23,16 @@ export default function ProfileModal(props) {
   //     password: password
   //   })
   // }
+
+//   Object.entries(allScores).flatMap(score => {
+//     return Object.values(score[1]).map(s => {return {...s, id: score[0]}})
+// })
+
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
   const [userResultsData, setUserResultsData] = useState({})
-  const [displayData, setDisplayData] = useState()
+  const [allScores, setAllScores] = useState({})
+  const [displayScores, setDisplayScores] = useState({})
 
 
   useEffect(() => {
@@ -49,7 +55,25 @@ export default function ProfileModal(props) {
       console.error(error);
     });
 
-    
+    console.log('second use effect')
+    get(child(dbRef, 'users')).then((snapshot) => {
+      if (snapshot.exists()) {
+        const allScoresData = snapshot.val()
+        setAllScores(allScoresData)
+        console.log(allScoresData)
+        console.log('data exists')
+       
+       
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    setDisplayScores(Object.entries(allScores).flatMap(score => {
+      return Object.values(score[1]).map(s => {return {...s, id: score[0]}})
+  }))
 
   }, [])
 
@@ -92,6 +116,14 @@ export default function ProfileModal(props) {
           <li> {value.date}, {value.quizResults} </li>)
           )}
         </ul>
+         
+        <ul>
+        {Object.values(displayScores).map(value => (
+          <li> {value.date}, {value.quizResults} </li>)
+        )}
+        </ul>
+         
+
       </Modal.Body>
       <Modal.Footer>
         <Link to="/quiz">
@@ -106,6 +138,9 @@ export default function ProfileModal(props) {
         </Link>
        <Button variant="primary" onClick={() => handleLogout()}>
           Logout
+       </Button>
+       <Button onClick={() => console.log(displayScores)}>
+         console
        </Button>
       {/* <Button onClick={()=> {writeUserData("tomdizon", "tom.dizon@gmail.com", "tomdizonpw")}}>
         Add User
