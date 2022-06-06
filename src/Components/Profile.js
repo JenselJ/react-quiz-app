@@ -31,20 +31,20 @@ export default function ProfileModal(props) {
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
   const [userResultsData, setUserResultsData] = useState({})
-  const [displayScores, setDisplayScores] = useState({})
+  const [displayScores, setDisplayScores] = useState([])
 
 
   useEffect(() => {
     console.log("use effect")
     const db = getDatabase(props.firebaseapp);
-    console.log(db)
-    console.log(user)
+    // console.log(db)
+    // console.log(user)
     const dbRef = ref(db);
     get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val()
         setUserResultsData(data)
-        console.log(data)
+        // console.log(data)
        
        
       } else {
@@ -58,12 +58,50 @@ export default function ProfileModal(props) {
     get(child(dbRef, 'users')).then((snapshot) => {
       if (snapshot.exists()) {
         const allScoresData = snapshot.val()
-        console.log(allScoresData)
+        // console.log(allScoresData)
         console.log('data exists')
-        setDisplayScores(Object.entries(allScoresData).flatMap(score => {
+
+        let scoresArray = {}
+
+        scoresArray = Object.entries(allScoresData).flatMap(score => {
           return Object.values(score[1]).map(s => {return {...s, id: score[0]}})
-      }))
-       
+      })
+
+      console.log(scoresArray)
+
+      let sortedScores = []
+
+      sortedScores = scoresArray.sort(function(a,b) {
+        if (b.quizResults === a.quizResults) {
+          return b.date - a.date
+        } else {
+        return b.quizResults - a.quizResults
+        }
+      })
+
+      console.log(sortedScores)
+
+      setDisplayScores(sortedScores)
+
+      // function sortObjectEntries(obj, n){
+   
+      //   let sortedList = []
+      //   //Sorting by values asc
+      //   sortedList = Object.entries(obj).sort((a,b)=>{
+      //         if(b[1] > a[1]) return 1;
+      //         else if(b[1] < a[1]) return -1;
+      //   //if values are same do edition checking if keys are in the right order
+      //         else {
+      //            if(a[0] > b[0]) return 1;
+      //            else if(a[0] < b[0]) return -1;
+      //            else return 0
+      //     }
+      //    })
+      //    // return first n values from sortedList
+      //     return sortedList.map(el=>el[0]).slice(0,n)
+      //    }
+
+      //  setDisplayScores(sortObjectEntries(scoresObject, 3))
        
       } else {
         console.log("No data available");
@@ -71,10 +109,6 @@ export default function ProfileModal(props) {
     }).catch((error) => {
       console.error(error);
     });
-
-    console.log("we are here")
-
-
 
   }, [])
 
@@ -101,15 +135,11 @@ export default function ProfileModal(props) {
     >
       <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
+          Profile Page
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>Profile Modal {user.uid}</h4>
-        <p>
-          Shows previous quiz attempt results...
-            
-        </p>
+        <h5>Your previous scores</h5>
 
         <ul>
          
@@ -117,6 +147,10 @@ export default function ProfileModal(props) {
           <li> {value.date}, {value.quizResults} </li>)
           )}
         </ul>
+
+        <h5>
+          Top scores across all players
+        </h5>
          
         <ul>
         {Object.values(displayScores).map(value => (
