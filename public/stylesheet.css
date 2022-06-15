@@ -1,0 +1,130 @@
+* {
+  margin: 0 0;
+  font-family: Graphik, sans-serif;
+
+}
+
+body {
+  padding-bottom: 50px;
+}
+
+.selective-entry-title {
+    color: #1B50BB;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+}
+
+.center {
+  margin: 0 auto;
+  display: block;
+  background-color: #1B50BB;
+  padding-top: 20px;
+}
+
+.div0 {
+  background-color: #1B50BB;
+  border-radius: 15px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.quote {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: large;
+}
+
+.join-button {
+  margin: 0 auto;
+  background-color: #FF6E00;
+  color: white;
+  border-radius: 15px;
+  font-size: 18px;
+  font-family: Graphik, sans-serif;
+  padding: 11px 25px 9px;
+  border: none;
+  box-shadow: 6px 6px 32px 0 rgb(0 0 0 / 5%), 0 2px 6px 0 rgb(0 0 0 / 10%), 1px 0 4px 0 rgb(0 0 0 / 15%);
+}
+
+h2 {
+  display:inline-block;
+  padding-bottom: 10px;
+}
+
+li {
+  line-height: 1.4;
+}
+
+.div-one, .div-two{
+  display: inline-block;
+  width: 40%;
+}
+
+.div-one {
+padding-left: 40px;
+padding-top: 40px;
+}
+
+.sample-test-div {
+padding-top: 20px;
+padding-left: 200px;
+}
+
+.learn-more-div {
+padding-left: 307px;
+padding-top: 15px;
+}
+
+.learn-more-button {
+  background-color: #FF6E00;
+  color: white;
+  border-radius: 15px;
+  font-size: 12px;
+  font-family: Graphik, sans-serif;
+  padding: 11px 25px 9px;
+  border: none;
+  box-shadow: 6px 6px 32px 0 rgb(0 0 0 / 5%), 0 2px 6px 0 rgb(0 0 0 / 10%), 1px 0 4px 0 rgb(0 0 0 / 15%);
+}
+
+.sample-test-button {
+  background-color: #1B50BB;
+  color: white;
+  border-radius: 15px;
+  font-size: 14px;
+  font-family: Graphik, sans-serif;
+  padding: 11px 25px 9px;
+  border: none;
+  box-shadow: 6px 6px 32px 0 rgb(0 0 0 / 5%), 0 2px 6px 0 rgb(0 0 0 / 10%), 1px 0 4px 0 rgb(0 0 0 / 15%);
+}
+
+.sample-test-button:hover {
+cursor: pointer;
+background-color: lightskyblue;
+}
+
+.sample-test-button:active {
+box-shadow: 0px 0px;
+}
+
+.join-button:hover {
+cursor: pointer;
+background-color: orange;
+}
+
+.join-button:active {
+box-shadow: 0px 0px;
+}
+
+.learn-more-button:hover {
+cursor: pointer;
+background-color: orange;
+}
+
+.learn-more-button:active {
+box-shadow: 0px 0px;
+}

@@ -61,27 +61,23 @@ export default function ProfileModal(props) {
         // console.log(allScoresData)
         console.log('data exists')
 
-        let scoresArray = {}
-
-        scoresArray = Object.entries(allScoresData).flatMap(score => {
+        let scoresArray = Object.entries(allScoresData).flatMap(score => {
           return Object.values(score[1]).map(s => {return {...s, id: score[0]}})
-      })
+        })
 
-      console.log(scoresArray)
+        console.log(scoresArray)
 
-      let sortedScores = []
-
-      sortedScores = scoresArray.sort(function(a,b) {
+        scoresArray.sort(function(a,b) {
         if (b.quizResults === a.quizResults) {
           return b.date - a.date
         } else {
         return b.quizResults - a.quizResults
         }
-      })
+       })
 
-      console.log(sortedScores)
+      console.log(scoresArray)
 
-      setDisplayScores(sortedScores)
+      setDisplayScores(scoresArray)
 
       // function sortObjectEntries(obj, n){
    
@@ -153,7 +149,7 @@ export default function ProfileModal(props) {
         </h5>
          
         <ul>
-        {Object.values(displayScores).map(value => (
+        {Object.values(displayScores).slice(0,3).map(value => (
           <li> {value.date}, {value.quizResults} </li>)
         )}
         </ul>

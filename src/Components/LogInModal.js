@@ -108,21 +108,17 @@ export default function LogInModal(props) {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" name="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
         </Form.Group>
+        <p style={{fontSize: 12, marginBottom: 5}}>Can't remember password?</p>
+        <Link to="/resetpassword">
+          <Button size="sm" variant="outline-primary" onClick={()=>{forgotPassword(email)}} >Forgot Password</Button>
+        </Link>
+        <p style={{fontSize: 12, marginTop: 12, marginBottom: 5}}>Don't have an account?</p>
+          <Button size="sm" variant="outline-primary" onClick={()=>{navigate('/signup')}}>Sign Up</Button>
       </Modal.Body>
       <Modal.Footer>
-        <Link to="/signup">
-        <Button variant="primary">
-          SignUp
-       </Button>
-        </Link>
       <Button variant="primary" type="submit">
           Login
-       </Button> 
-       <Link to="/resetpassword">
-       <Button variant="primary" onClick={()=>{forgotPassword(email)}}>
-          Forgot Password
-       </Button>
-       </Link>      
+       </Button>    
       </Modal.Footer>
     </Form>
 

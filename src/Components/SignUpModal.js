@@ -59,6 +59,8 @@ export default function SignUpModal(props) {
           <Form.Label>Password</Form.Label>
           <Form.Control required type="password" name="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
         </Form.Group>
+        <p style={{fontSize: 12, marginBottom: 5}}>Already have an account?</p>
+        <Button size="sm" variant="outline-primary" onClick={()=>{navigate('/login')}}>Login</Button>
       </Modal.Body>
       <Modal.Footer>
         <Button type="submit" variant="primary">

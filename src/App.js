@@ -14,6 +14,7 @@ import QuizModal from './Components/Quiz';
 import ResultsModal from './Components/Results';
 import ResetPasswordModal from './Components/ResetPassword';
 import QuizTwoModal from './Components/Quiz2';
+import Home from './Components/home-page.js'
 
 
 
@@ -286,8 +287,13 @@ function App() {
     <AuthContextProvider>
       <Router>
         <Routes>
-           <Route 
+          <Route 
                 exact path="/"
+                element={<Home
+                  />}
+              />
+           <Route 
+                exact path="/login"
                 element={<LogInModal
                   auth={auth}
                   setUser={setUser}
@@ -296,11 +302,11 @@ function App() {
               <Route 
                 exact path="/profile"
                 element={
-                // <RequireAuth>
+                <RequireAuth>
                   <ProfileModal
                     firebaseapp={app}
                   />
-                // </RequireAuth>
+                </RequireAuth>
               }
               />
               <Route 
