@@ -75,6 +75,16 @@ export default function ProfileModal(props) {
         }
        })
 
+       let date1 = scoresArray[0].date
+
+       console.log(date1)
+
+       const day1 = date1.getDate();
+       const month1 = date1.getMonth();
+       const year1 = date1.getFullYear();
+
+       console.log(`${day1} + ${month1} + ${year1}`)
+
       console.log(scoresArray)
 
       setDisplayScores(scoresArray)

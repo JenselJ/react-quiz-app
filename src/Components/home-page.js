@@ -10,7 +10,17 @@ export default function Home(props) {
 
   return (
     <div className="container">
-    <h1 className = "selective-entry-title">Selective Entry</h1>
+      <div className="d-flex">
+        <h1 className = "selective-entry-title">Selective Entry</h1>
+        <div className="my-auto">
+          <Button className="mx-2" onClick={()=>{navigate('/login')}}>
+            Login
+          </Button>
+        </div>
+        
+
+      </div>
+    
     <div className ='div0'>
       <img src='study.png' alt='students learning' width='575' height='403' class='center'/>
     <p className="quote">The ultimate resource for success in Thinking Skills
