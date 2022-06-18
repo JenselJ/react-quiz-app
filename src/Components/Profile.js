@@ -79,11 +79,27 @@ export default function ProfileModal(props) {
 
        console.log(date1)
 
-       const day1 = date1.getDate();
-       const month1 = date1.getMonth();
-       const year1 = date1.getFullYear();
+      //  const formatedDates = scoresArray.map(score => {
+      //   const d = new Date(score.date)
 
-       console.log(`${day1} + ${month1} + ${year1}`)
+      //   const day1 = d.getDate();
+      //   const month1 = d.getMonth();
+      //   const year1 = d.getFullYear();
+
+      //   return `${day1}/${month1}/${year1}`
+
+      //  })
+
+      
+
+      //  const d1 = new Date(date1)
+
+      //  const day1 = d1.getDate();
+      //  const month1 = d1.getMonth();
+      //  const year1 = d1.getFullYear();
+
+      //  console.log(`${day1}/${month1}/${year1}`)
+
 
       console.log(scoresArray)
 
@@ -128,6 +144,16 @@ export default function ProfileModal(props) {
     }
   }
   
+  const formatDate = timestamp => {
+    const d = new Date(timestamp)
+
+    const day1 = d.getDate();
+    const month1 = d.getMonth();
+    const year1 = d.getFullYear();
+
+    return `${day1}/${month1}/${year1}`
+
+   }
 
   return (
     <Modal
@@ -150,7 +176,7 @@ export default function ProfileModal(props) {
         <ul>
          
           {Object.values(userResultsData).map(value => (
-          <li> {value.date}, {value.quizResults} </li>)
+          <li> {formatDate(value.date)}, {value.quizResults}/ </li>)
           )}
         </ul>
 
@@ -160,7 +186,7 @@ export default function ProfileModal(props) {
          
         <ul>
         {Object.values(displayScores).slice(0,3).map(value => (
-          <li> {value.date}, {value.quizResults} </li>)
+          <li> {formatDate(value.date)}, {value.quizResults} </li>)
         )}
         </ul>
          
