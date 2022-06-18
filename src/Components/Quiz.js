@@ -95,7 +95,9 @@ function handleChange(answerId, questionIndex) {
       const newPostRef = push(postListRef);
       set(newPostRef, {
         quizResults: mark,
-        date: Date.now()
+        date: Date.now(),
+        quizName: "Quiz 1",
+        quizLength: props.array.length
       });
       
       

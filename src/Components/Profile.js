@@ -176,7 +176,7 @@ export default function ProfileModal(props) {
         <ul>
          
           {Object.values(userResultsData).map(value => (
-          <li> {formatDate(value.date)}, {value.quizResults}/ </li>)
+          <li> {value.quizName}: {formatDate(value.date)}, {value.quizResults}/{value.quizLength} </li>)
           )}
         </ul>
 
