@@ -5,7 +5,7 @@ import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
   onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get } from "firebase/database";
+import { getDatabase, ref, set, DatabaseReference, String, push, child, update, get, orderByChild, query, onSnapshot } from "firebase/database";
 
 export default function QuizTwoModal(props) {
 
@@ -95,9 +95,11 @@ function handleChange(answerId, questionIndex) {
       const newPostRef = push(postListRef);
       set(newPostRef, {
         quizResults: mark,
-        date: Date.now()
+        date: Date.now(),
+        quizName: "Quiz 2",
+        quizLength: props.array.length
       });
-      console.log(newPostRef.key)
+      
       
 
     // set a first instance of data
@@ -131,7 +133,53 @@ function handleChange(answerId, questionIndex) {
 
   function submitBtnHandler() {
     totalMark();
+    // newScore();
   }
+
+  // function newScore() {
+
+  //   console.log("newScore function")
+  //   const mark = props.userInput.reduce((accum, curr, i) => accum + (curr === props.array[i].correctAnswerIndex ? 1 : 0), 0)
+  //   const db = getDatabase(props.firebaseapp);  
+
+
+  //   const postScoreRef = ref(db, "allscores/");
+  //       const newScoreRef = push(postScoreRef);
+  //       set(newScoreRef, {
+  //         email: user.email,
+  //         quizResults: mark,
+  //         date: Date.now()
+  //       });
+
+  //       const q = query(postScoreRef, orderByChild('quizResults', 'desc'))
+
+  //       console.log(q)
+
+  //       onSnapshot(q, (snapshot) => {
+  //         let scores = []
+  //         snapshot.docs.forEach((doc) => {
+  //           scores.push({ ...doc.data(), id: doc.id })
+  //         })
+        
+  //         console.log(scores)
+  //       })
+
+        // const topUserPostsRef = query(ref(db, 'allscores'), orderByChild('quizResults'));
+
+        // get(topUserPostsRef)
+        // .then((snapshot) => {
+
+        //   let scores = []
+
+        //   snapshot.forEach(childSnapshot => {
+        //     scores.push(childSnapshot.val())
+        //   })
+
+        //   console.log(scores)
+
+        // })
+        
+  // }
 
   
 
@@ -174,7 +222,7 @@ function handleChange(answerId, questionIndex) {
       <Modal.Footer>
         <Button id="previous-question-btn" onClick={minusOneFromIndex}>Previous Question</Button>
         <Button onClick={nextBtnHandler}>Next Question</Button>
-        <Link to="/results">
+        <Link to="/resultstwo">
           <Button onClick={submitBtnHandler}>Submit Quiz</Button>
         </Link>
         

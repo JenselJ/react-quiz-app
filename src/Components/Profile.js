@@ -43,6 +43,7 @@ export default function ProfileModal(props) {
     get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val()
+        console.log(data)
         setUserResultsData(data)
         // console.log(data)
        
@@ -58,7 +59,7 @@ export default function ProfileModal(props) {
     get(child(dbRef, 'users')).then((snapshot) => {
       if (snapshot.exists()) {
         const allScoresData = snapshot.val()
-        // console.log(allScoresData)
+        console.log(allScoresData)
         console.log('data exists')
 
         let scoresArray = Object.entries(allScoresData).flatMap(score => {
@@ -176,7 +177,14 @@ export default function ProfileModal(props) {
         <ul>
          
           {Object.values(userResultsData).map(value => (
-          <li> {value.quizName}: {formatDate(value.date)}, {value.quizResults}/{value.quizLength} </li>)
+            <>
+            <h6>{value.quizName}:</h6>
+            <ul>
+              <li>Date Completed: {formatDate(value.date)}</li>
+              <li>Score: {value.quizResults}/{value.quizLength}</li>
+            </ul>
+            </>
+            )
           )}
         </ul>
 
@@ -186,7 +194,14 @@ export default function ProfileModal(props) {
          
         <ul>
         {Object.values(displayScores).slice(0,3).map(value => (
-          <li> {formatDate(value.date)}, {value.quizResults} </li>)
+          <>
+          <h6>{value.quizName}:</h6>
+          <ul>
+            <li>Date Completed: {formatDate(value.date)}</li>
+            <li>Score: {value.quizResults}/{value.quizLength}</li>
+          </ul>
+          </>
+        )
         )}
         </ul>
          

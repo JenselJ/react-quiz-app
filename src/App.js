@@ -15,6 +15,7 @@ import ResultsModal from './Components/Results';
 import ResetPasswordModal from './Components/ResetPassword';
 import QuizTwoModal from './Components/Quiz2';
 import Home from './Components/home-page.js'
+import ResultsTwoModal from './Components/Results2';
 
 
 
@@ -195,7 +196,7 @@ function App() {
         { id: 0, text: "Hypertext Transmission Procedure"},
         { id: 1, text: "Hypertext Transfer Protocol"},
         { id: 2, text: "Haemoglobin Tetrameter Transfusion Protein"},
-        { id: 3, text: "Happy to tell People"}
+        { id: 3, text: "Happy To Tell People"}
       ],
       correctAnswerIndex: 1,
       explanation: "Hypertext Transfer Protocol (HTTP) is the foundation of the World Wide Web, and is used to load web pages using hypertext links."
@@ -277,7 +278,6 @@ function App() {
       correctAnswerIndex: 1,
       explanation: "B is incorrect and the arrow function should be an equal sign: const isTruthy = function() {}. D is an anonymous function."
     }
-
   ]
 
 
@@ -340,10 +340,12 @@ function App() {
               <Route 
                 exact path="/quiztwo"
                 element={<QuizTwoModal
-                  array={array}
+                  array={arrayTwo}
                   userInput={userInput}
                   setUserInput={setUserInput}
                   firebaseapp={app}
+                  user={user}
+                  auth={auth}
                   />}
               />
 
@@ -353,7 +355,15 @@ function App() {
                   questionsArray={array}
                   userInput={userInput}
                   />}
-              />            
+              />
+
+              <Route 
+                exact path="/resultstwo"
+                element={<ResultsTwoModal
+                  questionsArray={arrayTwo}
+                  userInput={userInput}
+                  />}
+              />              
               
 
               {/* <Route exact path="/">
