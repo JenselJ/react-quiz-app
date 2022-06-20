@@ -31,7 +31,9 @@ export default function ProfileModal(props) {
   const { user, logout } = UserAuth()
   const navigate = useNavigate()
   const [userResultsData, setUserResultsData] = useState({})
-  const [displayScores, setDisplayScores] = useState([])
+  const [quizOneDisplayScores, setQuizOneDisplayScores] = useState([])
+  const [quizTwoDisplayScores, setQuizTwoDisplayScores] = useState([])
+
 
 
   useEffect(() => {
@@ -44,8 +46,24 @@ export default function ProfileModal(props) {
       if (snapshot.exists()) {
         const data = snapshot.val()
         console.log(data)
-        setUserResultsData(data)
         // console.log(data)
+
+        let dataArray = Object.values(data).flatMap(score => {
+          return {...score, id: score[0]}
+        })
+
+        console.log(dataArray)
+
+        dataArray.sort(function(a,b) {
+            return b.date - a.date
+         })
+
+         console.log(dataArray)
+
+         setUserResultsData(data)
+
+        console.log(userResultsData)
+        
        
        
       } else {
@@ -68,7 +86,24 @@ export default function ProfileModal(props) {
 
         console.log(scoresArray)
 
-        scoresArray.sort(function(a,b) {
+        let quizOneArray = []
+
+        let quizTwoArray = []
+
+
+        scoresArray.map(score => {
+          if (score.quizName === "Quiz 1") {
+            return quizOneArray.push(score)
+          } else if (score.quizName === "Quiz 2") {
+            return quizTwoArray.push(score)
+          }
+        }) 
+
+        console.log(quizOneArray)
+
+        console.log(quizTwoArray)
+
+        quizOneArray.sort(function(a,b) {
         if (b.quizResults === a.quizResults) {
           return b.date - a.date
         } else {
@@ -76,9 +111,19 @@ export default function ProfileModal(props) {
         }
        })
 
-       let date1 = scoresArray[0].date
+       quizTwoArray.sort(function(a,b) {
+        if (b.quizResults === a.quizResults) {
+          return b.date - a.date
+        } else {
+        return b.quizResults - a.quizResults
+        }
+       })
 
-       console.log(date1)
+      
+
+      //  let date1 = scoresArray[0].date
+
+      //  console.log(date1)
 
       //  const formatedDates = scoresArray.map(score => {
       //   const d = new Date(score.date)
@@ -104,7 +149,10 @@ export default function ProfileModal(props) {
 
       console.log(scoresArray)
 
-      setDisplayScores(scoresArray)
+      setQuizOneDisplayScores(quizOneArray)
+
+      setQuizTwoDisplayScores(quizTwoArray)
+
 
       // function sortObjectEntries(obj, n){
    
@@ -176,24 +224,7 @@ export default function ProfileModal(props) {
 
         <ul>
          
-          {Object.values(userResultsData).map(value => (
-            <>
-            <h6>{value.quizName}:</h6>
-            <ul>
-              <li>Date Completed: {formatDate(value.date)}</li>
-              <li>Score: {value.quizResults}/{value.quizLength}</li>
-            </ul>
-            </>
-            )
-          )}
-        </ul>
-
-        <h5>
-          Top scores across all players
-        </h5>
-         
-        <ul>
-        {Object.values(displayScores).slice(0,3).map(value => (
+        {Object.values(userResultsData).slice(0,3).map(value => (
           <>
           <h6>{value.quizName}:</h6>
           <ul>
@@ -204,7 +235,41 @@ export default function ProfileModal(props) {
         )
         )}
         </ul>
+
+        <h5>
+          Top scores across all players
+        </h5>
          
+         <h6>Quiz 1 Top Scores</h6>
+
+        <ul>
+        {Object.values(quizOneDisplayScores).slice(0,3).map(value => (
+          <>
+          <ul>
+            <li>Score: {value.quizResults}/{value.quizLength}</li>
+            <li>Date Completed: {formatDate(value.date)}</li>
+
+            <br></br>
+          </ul>
+          </>
+        )
+        )}
+        </ul>
+
+        <h6>Quiz 2 Top Scores</h6>
+
+        <ul>
+        {Object.values(quizTwoDisplayScores).slice(0,3).map(value => (
+          <>
+          <ul>
+            <li>Score: {value.quizResults}/{value.quizLength}</li>
+            <li>Date Completed: {formatDate(value.date)}</li>
+            <br></br>
+          </ul>
+          </>
+        )
+        )}
+        </ul> 
 
       </Modal.Body>
       <Modal.Footer>
@@ -221,9 +286,9 @@ export default function ProfileModal(props) {
        <Button variant="primary" onClick={() => handleLogout()}>
           Logout
        </Button>
-       <Button onClick={() => console.log(displayScores)}>
+       {/* <Button onClick={() => console.log(displayScores)}>
          console
-       </Button>
+       </Button> */}
       {/* <Button onClick={()=> {writeUserData("tomdizon", "tom.dizon@gmail.com", "tomdizonpw")}}>
         Add User
       </Button> */}
