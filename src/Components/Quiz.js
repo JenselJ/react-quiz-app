@@ -16,20 +16,22 @@ export default function QuizModal(props) {
 
   useEffect(() => {
     console.log("use effect")
-    const db = getDatabase(props.firebaseapp);
-    const dbRef = ref(db);
-    get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val()
-        setUserResultsData(data)
-        console.log(data)
-        console.log(userResultsData)
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
+    props.setUserInput([])
+
+    // const db = getDatabase(props.firebaseapp);
+    // const dbRef = ref(db);
+    // get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+    //   if (snapshot.exists()) {
+    //     const data = snapshot.val()
+    //     setUserResultsData(data)
+    //     console.log(data)
+    //     console.log(userResultsData)
+    //   } else {
+    //     console.log("No data available");
+    //   }
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
   }, [])
 
 function handleChange(answerId, questionIndex) {
@@ -193,7 +195,7 @@ function handleChange(answerId, questionIndex) {
       backdrop="static"
       keyboard={false}
     >
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
           Question {arrayIndex + 1} of {props.array.length}
         </Modal.Title>
@@ -225,7 +227,6 @@ function handleChange(answerId, questionIndex) {
         <Link to="/results">
           <Button onClick={submitBtnHandler}>Submit Quiz</Button>
         </Link>
-        
       </Modal.Footer>
     </Modal>
   );

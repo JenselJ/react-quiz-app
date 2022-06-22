@@ -52,15 +52,15 @@ export default function ProfileModal(props) {
           return {...score, id: score[0]}
         })
 
-        console.log(dataArray)
+        console.log(JSON.parse(JSON.stringify(dataArray)))
 
         dataArray.sort(function(a,b) {
             return b.date - a.date
          })
 
-         console.log(dataArray)
+         console.log(JSON.parse(JSON.stringify(dataArray)))
 
-         setUserResultsData(data)
+         setUserResultsData(dataArray)
 
         console.log(userResultsData)
         

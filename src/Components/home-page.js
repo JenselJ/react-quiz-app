@@ -11,7 +11,7 @@ export default function Home(props) {
   return (
     <div className="container">
       <div className="d-flex">
-        <h1 className = "selective-entry-title">Selective Entry</h1>
+        <h1 className = "selective-entry-title">Sunny's Spectacular Quizes</h1>
         <div className="my-auto">
           <Button className="mx-2" onClick={()=>{navigate('/login')}}>
             Login
@@ -22,12 +22,12 @@ export default function Home(props) {
       </div>
     
     <div className ='div0'>
-      <img src='study.png' alt='students learning' width='575' height='403' class='center'/>
-    <p className="quote">The ultimate resource for success in Thinking Skills
-        <br></br><button onClick={()=> {navigate('/signup')}} class="join-button">Join Now</button>
+      <img style={{maxWidth: "100%"}} src='study.png' alt='students learning' height='403' class='center'/>
+    <p className="quote">Test your general and front-end knowledge!
+        <br></br><button style={{marginTop: "20px"}} onClick={()=> {navigate('/signup')}} class="join-button">Join Now</button>
     </p>
     </div>
-    <div className = "div-one">
+    {/* <div className = "div-one">
       <h2>Thinking Skills package from just $10</h2>
         <ul>
       <li>100+ Questions</li>
@@ -45,7 +45,7 @@ export default function Home(props) {
       <div className = "sample-test-div">
       <a href="/login"><button className="sample-test-button">Take free Thinking Skills sample test</button></a>
       </div>
-    </div>
+    </div> */}
 
     </div>
   );

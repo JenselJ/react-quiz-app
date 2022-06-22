@@ -193,7 +193,7 @@ function handleChange(answerId, questionIndex) {
       backdrop="static"
       keyboard={false}
     >
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
           Question {arrayIndex + 1} of {props.array.length}
         </Modal.Title>
