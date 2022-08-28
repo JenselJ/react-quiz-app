@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
@@ -14,7 +14,7 @@ import QuizModal from './Components/Quiz';
 import ResultsModal from './Components/Results';
 import ResetPasswordModal from './Components/ResetPassword';
 import QuizTwoModal from './Components/Quiz2';
-import Home from './Components/home-page.js'
+import Home from './homepage/home-page.js'
 import ResultsTwoModal from './Components/Results2';
 
 
@@ -140,7 +140,11 @@ function App() {
 
   const [user, setUser] = useState();
   const [resultsKey, setResultsKey] = useState();
+  const [email, setEmail] = useState('')
 
+  useEffect(() => {
+    setEmail('')
+  }, [])
 
 
 
@@ -290,6 +294,7 @@ function App() {
           <Route 
                 exact path="/"
                 element={<Home
+                  setEmail={setEmail}
                   />}
               />
            <Route 
@@ -321,6 +326,8 @@ function App() {
                 element={<SignUpModal
                   auth={auth}
                   setUser={setUser}
+                  email={email}
+                  setEmail={setEmail}
                   />}
               />
 

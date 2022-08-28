@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Stack, Container, Modal, Form, Alert } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 
-
 export default function SignUpModal(props) {
 
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
@@ -19,7 +17,7 @@ export default function SignUpModal(props) {
     e.preventDefault()
     setError('')
     try{
-      await createUser(email, password)
+      await createUser(props.email, password)
       navigate('/profile')
       // navigate to the profile screen if successful
     
@@ -49,7 +47,7 @@ export default function SignUpModal(props) {
       <Modal.Body>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control required type="email" name="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
+          <Form.Control required type="email" name="email" placeholder="Enter Email" value={props.email} onChange={(e) => props.setEmail(e.target.value)} />
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text>

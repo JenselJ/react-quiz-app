@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-rout
 import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../App';
 
-
 export default function LogInModal(props) {
   const navigate = useNavigate()
 
